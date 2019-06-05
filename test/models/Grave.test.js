@@ -4,7 +4,6 @@ const Grave = require('../../lib/models/Grave');
 describe('Grave model', () => {
   const graveyardId = new mongoose.Types.ObjectId;
   it('has a occupied and location', () => {
-
     const grave = new Grave({
       occupied: false,
       graveyard: graveyardId
