@@ -3,54 +3,46 @@ const Grave = require('../../lib/models/Grave');
 
 describe('Grave model', () => {
   const graveyardId = new mongoose.Types.ObjectId;
-  it('has a title and location', () => {
+  it('has a occupied and location', () => {
 
     const grave = new Grave({
-      title: 'test grave',
-      location: {
-        lat: '47.1443',
-        lng: '-122.1408',
-        city: 'Prairie Ridge',
-        state: 'WA'
-      },
+      occupied: false,
       graveyard: graveyardId
     });
 
     expect(grave.toJSON()).toEqual({
       _id: expect.any(mongoose.Types.ObjectId),
-      title: 'test grave',
-      location: {
-        lat: '47.1443',
-        lng: '-122.1408',
-        city: 'Prairie Ridge',
-        state: 'WA'
-      },
+      occupied: false,
       graveyard: graveyardId
     });
 
   });
   
-  it('has a required title', () => {
+  it('has a required occupied', () => {
     const grave = new Grave({
-      location: {
-        lat: '47.1443',
-        lng: '-122.1408',
-        city: 'Prairie Ridge',
-        state: 'WA'
-      },
       graveyard: graveyardId
     });
         
     const error = grave.validateSync().errors;
-    expect(error.title.message).toBe('Path `title` is required.');
+    expect(error.occupied.message).toBe('Path `occupied` is required.');
   });
   
   it('has a required graveyard', () => {
     const grave = new Grave({
-      title: 'test grave'
+      occupied: false
     });
         
     const error = grave.validateSync().errors;
     expect(error.graveyard.message).toBe('Path `graveyard` is required.');
+  });
+  
+  it('has a required occupant if occupied', () => {
+    const grave = new Grave({
+      occupied: true,
+      graveyard: graveyardId
+    });
+        
+    const error = grave.validateSync().errors;
+    expect(error.occupant.message).toBe('Path `occupant` is required.');
   });
 });
