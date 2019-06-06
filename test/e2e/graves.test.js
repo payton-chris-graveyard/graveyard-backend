@@ -41,4 +41,21 @@ describe('grave routes', () => {
       graveyard: graveyardId.toString()
     }]);
   });
+  
+  it('can get a grave by id', async() => {
+    const createdTestGrave = await request(app)
+      .post('/api/v1/graves')
+      .send(testGrave);
+    
+    const res = await request(app)
+      .get(`/api/v1/graves/${createdTestGrave.body._id}`);
+
+    expect(res.body).toEqual({
+      _id: expect.any(String),
+      __v: 0,
+      occupied: true,
+      occupant: 'test corpse',
+      graveyard: graveyardId.toString()
+    });
+  });
 });
