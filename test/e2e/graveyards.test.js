@@ -42,7 +42,7 @@ describe('graveyard routes', () => {
       
     const res = await request(app)
       .get('/api/v1/graveyards');
-    
+      
     expect(res.body).toEqual([{
       _id: expect.any(String),
       __v: 0,
