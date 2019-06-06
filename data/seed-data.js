@@ -8,7 +8,7 @@ const connect = require('../lib/utils/connect');
 
 
 const seedData = async({
-  occupantCount = 10,
+  occupantCount = 100,
   graveyardCount = 3,
   occupiedGraveCount = 10,
   unoccupiedGraveCount = 17
