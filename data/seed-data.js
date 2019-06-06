@@ -39,20 +39,24 @@ const seedData = async({
 
   [...Array(occupiedGraveCount)]
     .map(async() => {
+      const graveyardId = noMoreThanOccupied(createdGraveyards);
       const occupiedGrave = {
         occupied: true,
         occupant: chance.pickone(createdOccupants)._id,
-        graveyard: noMoreThanOccupied(createdGraveyards)
+        graveyard: graveyardId
       };
+      await Graveyard.findByIdAndUpdate(graveyardId, { $inc: { occupiedGraves: 1 } });
       return await Grave.create(occupiedGrave);
     });
 
   [...Array(unoccupiedGraveCount)]
     .map(async() => {
+      const graveyardId = noMoreThanOccupied(createdGraveyards);
       const unoccupiedGrave = {
         occupied: false,
-        graveyard: noMoreThanOccupied(createdGraveyards)
+        graveyard: graveyardId
       };
+      await Graveyard.findByIdAndUpdate(graveyardId, { $inc: { occupiedGraves: 1 } });
       return await Grave.create(unoccupiedGrave);
     });
 
