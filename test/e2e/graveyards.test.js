@@ -15,6 +15,14 @@ describe('graveyard routes', () => {
     occupiedGraves: 20
   };
 
+  const testOccupant = {
+    name: 'greg',
+    dob: '12/01/1900',
+    dod: '12/01/2000',
+    causeOfDeath: 'fell',
+    epitaph: 'nice guy'
+  };
+
   it('can create a graveyard', async() => {
     const res = await request(app)
       .post('/api/v1/graveyards')
@@ -62,11 +70,16 @@ describe('graveyard routes', () => {
     const createdGraveyard = await request(app)
       .post('/api/v1/graveyards')
       .send(testGraveyard);
-
     const graveyardId = createdGraveyard.body._id;
+
+    const occupantRes = await request(app)
+      .post('/api/v1/graves/occupant')
+      .send(testOccupant);
+    const occupantId = occupantRes.body._id;
+
     const testGrave1 = {
       occupied: true,
-      occupant: 'test corpse 1',
+      occupant: occupantId,
       graveyard: graveyardId
     };
     
@@ -102,7 +115,15 @@ describe('graveyard routes', () => {
           _id: expect.any(String),
           __v: 0,
           occupied: true,
-          occupant: 'test corpse 1',
+          occupant: {
+            _id: expect.any(String),
+            __v: 0,
+            name: 'greg',
+            dob: '12/01/1900',
+            dod: '12/01/2000',
+            causeOfDeath: 'fell',
+            epitaph: 'nice guy'
+          },
           graveyard: graveyardId.toString()
         },
         {
