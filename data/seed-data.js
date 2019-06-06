@@ -38,22 +38,35 @@ const seedData = async({
   const createdGraveyards = await Graveyard.create(graveyards);
 
   const occupiedGraves = [...Array(occupiedGraveCount)]
-    .map(() => ({
-      occupied: true,
-      occupant: chance.pickone(createdOccupants)._id,
-      graveyard: chance.pickone(createdGraveyards)._id
-    }));
+    .map(() => {
+      return {
+        occupied: true,
+        occupant: chance.pickone(createdOccupants)._id,
+        graveyard: noMoreThanOccupied(createdGraveyards)
+      };
+    });
 
   const unoccupiedGraves = [...Array(unoccupiedGraveCount)]
-    .map(() => ({
-      occupied: false,
-      graveyard: chance.pickone(createdGraveyards)._id
-    }));
+    .map(() => {
+      return {
+        occupied: false,
+        graveyard: noMoreThanOccupied(createdGraveyards)
+      };
+    });
 
   await Grave.create(occupiedGraves);
   await Grave.create(unoccupiedGraves);
 
   return mongoose.connection.close();
+};
+
+const noMoreThanOccupied = (createdGraveyards) => {
+  let graveyard = null;
+  do{
+    graveyard = chance.pickone(createdGraveyards);
+  } while(graveyard.occupiedGraves >= 9);
+
+  return graveyard._id;    
 };
 
 connect();

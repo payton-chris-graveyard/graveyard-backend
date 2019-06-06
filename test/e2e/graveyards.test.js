@@ -12,7 +12,6 @@ describe('graveyard routes', () => {
       state: 'WA'
     },
     totalGraves: 100,
-    occupiedGraves: 20
   };
 
   const testOccupant = {
@@ -39,7 +38,7 @@ describe('graveyard routes', () => {
         state: 'WA'
       },
       totalGraves: 100,
-      occupiedGraves: 20
+      occupiedGraves: 0
     });
   });
   
@@ -62,7 +61,7 @@ describe('graveyard routes', () => {
         state: 'WA'
       },
       totalGraves: 100,
-      occupiedGraves: 20
+      occupiedGraves: 0
     }]);
   });
   
@@ -109,7 +108,7 @@ describe('graveyard routes', () => {
         state: 'WA'
       },
       totalGraves: 100,
-      occupiedGraves: 20,
+      occupiedGraves: 2,
       graves: [
         {
           _id: expect.any(String),
