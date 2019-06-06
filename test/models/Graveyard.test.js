@@ -74,20 +74,4 @@ describe('Graveyard model', () => {
     const error = graveyard.validateSync().errors;
     expect(error.totalGraves.message).toBe('Path `totalGraves` is required.');
   });
-  
-  it('has a required totalGraves', () => {
-    const graveyard = new Graveyard({
-      name: 'test graveyard',
-      location: {
-        lat: '47.1443',
-        lng: '-122.1408',
-        city: 'Prairie Ridge',
-        state: 'WA'
-      },
-      totalGraves: 100
-    });
-
-    const error = graveyard.validateSync().errors;
-    expect(error.occupiedGraves.message).toBe('Path `occupiedGraves` is required.');
-  });
 });
