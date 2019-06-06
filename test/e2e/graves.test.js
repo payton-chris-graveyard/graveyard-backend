@@ -25,6 +25,23 @@ describe('grave routes', () => {
     });
   });
   
+  it('can create an empty grave', async() => {
+    const emptyGrave = {
+      occupied: false,
+      graveyard: graveyardId
+    };
+    const res = await request(app)
+      .post('/api/v1/graves')
+      .send(emptyGrave);
+    
+    expect(res.body).toEqual({
+      _id: expect.any(String),
+      __v: 0,
+      occupied: false,
+      graveyard: graveyardId.toString()
+    });
+  });
+  
   it('can get all graves', async() => {
     await request(app)
       .post('/api/v1/graves')
