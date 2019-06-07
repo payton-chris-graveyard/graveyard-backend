@@ -37,7 +37,7 @@ const seedData = async({
   const createdOccupants = await Occupant.create(occupants);
   const createdGraveyards = await Graveyard.create(graveyards);
 
-  [...Array(occupiedGraveCount)]
+  await Promise.all([...Array(occupiedGraveCount)]
     .map(async() => {
       const graveyardId = noMoreThanOccupied(createdGraveyards);
       const occupiedGrave = {
@@ -45,20 +45,32 @@ const seedData = async({
         occupant: chance.pickone(createdOccupants)._id,
         graveyard: graveyardId
       };
-      await Graveyard.findByIdAndUpdate(graveyardId, { $inc: { occupiedGraves: 1 } });
-      return await Grave.create(occupiedGrave);
-    });
+      try {
+        return Promise.all([
+          Graveyard.findByIdAndUpdate(graveyardId, { $inc: { occupiedGraves: 1 } }), 
+          Grave.create(occupiedGrave)
+        ]);
+      } catch(err) {
+        console.log(err);
+      }
+    }));
 
-  [...Array(unoccupiedGraveCount)]
+  await Promise.all([...Array(unoccupiedGraveCount)]
     .map(async() => {
       const graveyardId = noMoreThanOccupied(createdGraveyards);
       const unoccupiedGrave = {
         occupied: false,
         graveyard: graveyardId
-      };
-      await Graveyard.findByIdAndUpdate(graveyardId, { $inc: { occupiedGraves: 1 } });
-      return await Grave.create(unoccupiedGrave);
-    });
+      };  
+      try {
+        return Promise.all([
+          Graveyard.findByIdAndUpdate(graveyardId, { $inc: { occupiedGraves: 1 } }),
+          Grave.create(unoccupiedGrave)
+        ]);
+      } catch(err) {
+        console.log(err);
+      }
+    }));
 
   return mongoose.connection.close();
 };
