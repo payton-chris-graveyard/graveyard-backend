@@ -34,6 +34,7 @@ describe('grave routes', () => {
       epitaph: 'nice guy'
     });
   });
+
   it('can create a grave', async() => {
     const occupantRes = await request(app)
       .post('/api/v1/graves/occupant')
@@ -169,4 +170,63 @@ describe('grave routes', () => {
       graveyard: graveyardId.toString()
     });
   });
+  
+  it('can get update a grave by id from empty to occupied', async() => {
+    const actualData = {
+      id: '5cf9a94c77c7240859ae703e',
+      occupied: true,
+      name: 'dave',
+      dob: '12/08/1999',
+      dod: '12/09/2001',
+      causeOfDeath: 'ya know',
+      epitaph: 'she was happy',
+      graveyard: '5cf9a94c77c7240859ae7024'
+    };
+    
+    const createdTestGrave = await request(app)
+      .post('/api/v1/graves')
+      .send(emptyGrave);
+    
+    const res = await request(app)
+      .patch(`/api/v1/graves/${createdTestGrave.body._id}`)
+      .send(actualData);
+
+    expect(res.body).toEqual({
+      _id: createdTestGrave.body._id.toString(),
+      __v: 0,
+      occupied: true,
+      occupant: expect.any(String),
+      graveyard: graveyardId.toString()
+    });
+  });
+
+  // it('can get update a grave by id from occupied to unoccupied', async() => {
+  //   const occupantRes = await request(app)
+  //     .post('/api/v1/graves/occupant')
+  //     .send(testOccupant);
+  //   const occupantId = occupantRes.body._id;
+
+  //   const testGrave = {
+  //     occupied: true,
+  //     occupant: occupantId,
+  //     graveyard: graveyardId
+  //   };
+
+  //   const createdTestGrave = await request(app)
+  //     .post('/api/v1/graves')
+  //     .send(testGrave);
+    
+  //   const res = await request(app)
+  //     .patch(`/api/v1/graves/${createdTestGrave.body._id}`)
+  //     .send({
+  //       occupied: false,
+  //     });
+
+  //   expect(res.body).toEqual({
+  //     _id: expect.any(String),
+  //     __v: 0,
+  //     occupied: false,
+  //     graveyard: graveyardId.toString()
+  //   });
+  // });
 });
